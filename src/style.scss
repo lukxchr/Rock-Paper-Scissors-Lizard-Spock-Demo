@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&display=swap');
+
+$background1: hsl(214, 47%, 23%);
+$background2: hsl(237, 49%, 15%);
+$dark-text: hsl(229, 25%, 31%);
+$score-text: hsl(229, 64%, 46%);
+$header-outline: hsl(217, 16%, 45%);
+$color: red;
+
+@mixin my-border($color) {
+  border: 1px solid $color;
+}
+
+body {
+  background-image: radial-gradient($background1, $background2);
+  color: $dark-text;
+  font-family: "Barlow Semi Condensed";
+}
+
+div {
+	border: dashed 1px;
+}
+
