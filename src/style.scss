@@ -1,23 +1,304 @@
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&display=swap');
 
-$background1: hsl(214, 47%, 23%);
-$background2: hsl(237, 49%, 15%);
+
 $dark-text: hsl(229, 25%, 31%);
 $score-text: hsl(229, 64%, 46%);
 $header-outline: hsl(217, 16%, 45%);
-$color: red;
 
-@mixin my-border($color) {
-  border: 1px solid $color;
-}
+/*gradient colors*/
+$background1: hsl(214, 47%, 23%);
+$background2: hsl(237, 49%, 15%);
+$scissors1: hsl(39, 89%, 49%);
+$scissors2: hsl(40, 84%, 53%);
+$paper1: hsl(230, 89%, 62%);
+$paper2: hsl(230, 89%, 65%);
+$rock1: hsl(349, 71%, 52%);
+$rock2: hsl(349, 70%, 56%);
+$lizard1: hsl(261, 73%, 60%); 
+$lizard2: hsl(261, 72%, 63%);
+$spock1: hsl(189, 59%, 53%);
+$spock2: hsl(189, 58%, 57%);
 
 body {
   background-image: radial-gradient($background1, $background2);
   color: $dark-text;
   font-family: "Barlow Semi Condensed";
+  height: 100vh;
+  width: 100vw;
+
+  overflow: hidden;
+/*  height: 100%;
+  width: 100%;*/
 }
 
-div {
-	border: dashed 1px;
+#game {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	// margin: 1vmin;
 }
+
+/*div {
+	border: dashed 1px;
+}*/
+
+/*scoreboard*/
+#scoreboard {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-color: $header-outline;
+	border: solid 1px;
+	border-radius: 10px;
+	max-width: 100vw;
+	min-width: 50vw;
+	height: 20vh;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+#score-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	background-color: white;
+	height: 90%;
+	width: 20%;
+	border-radius: 5%;
+}
+#score-label {
+	font-size: 2.5vh;
+	display: flex;
+	justify-content: center;
+}
+#score-value {
+	font-size: 10vh;
+	display: flex;
+	justify-content: center;
+	line-height: 0.8;
+}
+
+#logo {
+	height: 90%;
+}
+
+/*main game window: board and moves for different game steps*/
+
+#board-outer {
+	height: 70vh;
+	width: 80vw;
+	// min-width: 85vh;
+	// min-width: 500px;
+	min-width: 450px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#board-inner {
+		width: 45vh;
+		height: 45vh;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		align-content: space-between;
+		background: url('images/bg-pentagon.svg');
+		// background-size: 329px 313px;
+		background-size: 45vh * 329/313 45vh;
+		// background-size: auto auto;
+	}
+
+
+
+// moves
+.move-outer {
+	border-radius: 50%;
+	width: 15vh;
+	height: 15vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.move-inner {
+	background-color: white;
+	width: 50%;
+	height: 50%;
+	padding: 12.5%;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+}
+.move-img {
+	width: 90%;
+	height: 90%;
+}
+%rock-shared {
+	background-image: radial-gradient($rock1, $rock2);
+	position: relative;
+}
+%paper-shared {
+	background-image: radial-gradient($paper1, $paper2);
+	position: relative;
+}
+%scissors-shared {
+	background-image: radial-gradient($scissors1, $scissors2);
+	position: relative;
+}
+%lizard-shared {
+	background-image: radial-gradient($lizard1, $lizard2);
+	position: relative;
+}
+%spock-shared {
+	background-image: radial-gradient($spock1, $spock2);
+	position: relative;
+}
+
+// positions moves around pentagon for game start
+.round-start {
+	.rock-move {
+		@extend %rock-shared;
+		bottom: -12.5%;
+		right: -12.5%;
+	}
+	.paper-move {
+		@extend %paper-shared;
+		bottom: -25%;
+		right: -15%;
+	}
+	.scissors-move {
+		@extend %scissors-shared;
+		position: relative;
+		top: -12.5%;
+	}
+	.lizard-move {
+		@extend %lizard-shared;
+		bottom: -12.5%;
+		left: -12.5%
+	}
+	.spock-move {
+		@extend %spock-shared;
+		bottom: -25%;
+		left: -15%;
+	}
+}
+
+.moves-picked, .show-results {
+	.move-outer {
+		height: 35vmin;
+		width: 35vmin;
+	}
+	.rock-move {
+		@extend %rock-shared;
+	}
+	.paper-move {
+		@extend %paper-shared;
+
+	}
+	.scissors-move {
+		@extend %scissors-shared;
+	
+	}
+	.lizard-move {
+		@extend %lizard-shared;
+	
+	}
+	.spock-move {
+		@extend %spock-shared;
+	}
+}
+
+
+
+
+// other
+
+
+
+$btn-border-radius: 5px;
+
+#rules-button {
+	border-radius: $btn-border-radius;
+	border: solid 2px;
+	height: 5vh;
+	width: 10vw;
+	min-width: 100px;
+	color: white;
+	background: none;
+	margin: 2vh;
+}
+
+@media only screen and (min-width: 600px) {
+  #rules-button {
+    align-self: flex-end;
+  }
+}
+
+#play-again-btn {
+	border-radius: $btn-border-radius;
+	background-color: white;
+	color: $background1;
+	height: 6vh;
+	width: 12vw;
+	min-width: 100px;
+	border: none;
+	font-weight: 700;
+}
+
+#player-choice {
+	margin-right: 2vw;
+}
+
+#house-choice {
+	margin-left: 2vw;
+}
+
+
+@media only screen and (max-width: 599px) {
+  #board-outer {
+  	flex-wrap: wrap;
+  }
+  #result-container {
+  	order: 1
+  }  
+  #scoreboard {
+  	min-width: 90vw;
+  }
+}
+
+.choice-label {
+	display: flex;
+	justify-content: center;
+	color: white;
+	text-shadow: 1px 1px 2px black;
+	letter-spacing: 0.075em;
+	margin-bottom: 20%;
+}
+#result-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#result-message {
+	display: flex;
+	justify-content: center;
+	color: white;
+	text-shadow: 1px 1px 2px black;
+	font-size: 2em;
+	min-width: 150px;
+}
+
+.attribution {
+	position: fixed;
+	bottom: 0px;
+}
+
+
+
+
+
+
+
+
+
 

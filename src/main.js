@@ -1,9 +1,15 @@
 function Move(props) {
-	return (
-		<button 
-			className="move"
-			onClick={props.onClick}
-		>{props.name}</button>
+	const outerClases = 
+    `move-outer ${props.name.toLowerCase()}-move`;
+  return (
+    <div
+      className={outerClases}
+      onClick={props.onClick}
+    >
+    <div className="move-inner">
+      <img className="move-img" src={props.imgPath}/>
+    </div>
+    </div>
 	);
 }
 
@@ -12,7 +18,7 @@ function PlayAgainButton(props) {
     <button
       id="play-again-btn"
       onClick={props.onClick}
-    >Play Again</button>
+    >PLAY AGAIN</button>
 	);
 }
 
@@ -21,7 +27,7 @@ function ShowRulesButton(props) {
     <button
       id="rules-button"
       onClick={() => alert('rules!')}
-    >Rules</button>
+    >RULES</button>
   );
 }
 
@@ -34,12 +40,10 @@ function RulesModal(props) {
 function Scoreboard(props) {
 	return (
 		<div id="scoreboard">
-			<div id="scoreboard-title">
-				Rock<br/>Paper<br/>Scissors
-			</div>
-			<div id="score">
-				<span id="score-label">Score: </span>
-				<span id="score-value">{props.score}</span>
+      <img id="logo" src="images/logo-bonus.svg"/>
+			<div id="score-container">
+				<div id="score-label">SCORE</div>
+				<div id="score-value">{props.score}</div>
 			</div>
 		</div>
 	);
@@ -52,35 +56,52 @@ class Board extends React.Component {
 			name={move}
 			key={move}
 			onClick={() => this.props.handleMoveClick(move)}
+      imgPath={`images/icon-${move.toLowerCase()}.svg`}
 		/>);
 	}
 
-  renderMovesPickedStep() {
-    return (
-        <div>
-          <p>You picked {this.renderMove(this.props.playerMove)}</p>
-          <p>The house picked {this.renderMove(this.props.houseMove)}</p>
-        </div>
-      );
-  }
-
-  renderShowResultsStep() {
-    let resultMessage = this.props.roundResult === 1 ? 'You win' : 
-        (this.props.roundResult === 0 ? "It's a tie" : 'You lose');
+  renderResult() {
+    let resultMessage = this.props.roundResult === 1 ? 'YOU WIN' : 
+        (this.props.roundResult === 0 ? "IT'S A TIE" : 'YOU LOSE');
       return (
-        <div>
-          <p>You picked {this.props.playerMove}</p>
-          <p>The house picked {this.props.houseMove}</p>
-          <p>{resultMessage}</p>
+        <div id="result-container">
+          <p id="result-message">{resultMessage}</p>
           <PlayAgainButton onClick={() => this.props.handlePlayAgainClick()}/>
         </div>
       );
   }
 
+  renderRoundStart() {
+    return (
+      <div id="board-outer" className="round-start">
+        <div id="board-inner">
+          {this.props.moves.map(move => this.renderMove(move))}
+        </div>
+      </div>
+    );
+  }
+
+  renderMovesPicked(showWinner=false) {
+    const stepClass = showWinner ? "show-results" : "moves-picked"
+    return (
+        <div id="board-outer" className={stepClass}>
+          <div id="player-choice" className="choice">
+            <div id="player-choice-label" className="choice-label">YOU PICKED</div>
+            {this.renderMove(this.props.playerMove)}
+          </div>
+          {showWinner ? this.renderResult() : null}
+          <div id="house-choice" className="choice">
+            <div id="house-choice-label" className="choice-label">THE HOUSE PICKED</div>
+            {this.renderMove(this.props.houseMove)}
+          </div>
+        </div>
+      );
+  }
+
 	render() {
-		if (this.props.gameStep === 'roundStart') return this.props.moves.map(move => this.renderMove(move));
-		if (this.props.gameStep === 'movesPicked') return this.renderMovesPickedStep();
-		if (this.props.gameStep === 'showResult') return this.renderShowResultsStep(); 
+		if (this.props.gameStep === 'roundStart') return this.renderRoundStart();
+		if (this.props.gameStep === 'movesPicked') return this.renderMovesPicked();
+		if (this.props.gameStep === 'showResult') return this.renderMovesPicked(showWinner=true);
     return "Invalid game step."
 	}
 }
@@ -97,6 +118,7 @@ class Game extends React.Component {
 	}
 
 	handleMoveClick(move) {
+    if (this.state.gameStep !== 'roundStart') return;
 		//choose randomly 
 		const houseMove = this.props.moves[Math.floor(Math.random() * this.props.moves.length)];
 		//-1=you lose, 0=draw, 1=you win
@@ -126,7 +148,7 @@ class Game extends React.Component {
 
 	render() {
 		return (
-			<div onClick={this.handleWindowClick}>
+			<div id="game" onClick={this.handleWindowClick}>
 				<Scoreboard
 					score = {this.state.score}
 				/>
@@ -145,7 +167,7 @@ class Game extends React.Component {
 	}
 }
 
-const moves = ['Rock', 'Paper', 'Scissors', 'Lizard', 'Spock'];
+const moves = ['Spock', 'Scissors', 'Paper', 'Lizard', 'Rock',];
 //rules[x]=[a,b,c] means x beats a, b and c
 const rules = {
 	'Rock': ['Lizard', 'Scissors'],
@@ -162,10 +184,3 @@ ReactDOM.render(
 	/>,
 	document.getElementById('root')
 );
-
- // (
- //    	<React.Fragment>
- //    	<h1>Hello, world!</h1>
- //    	<h2>it's react</h2>
- //    	</React.Fragment>
- //    )

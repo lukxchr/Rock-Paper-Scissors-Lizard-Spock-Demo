@@ -7,13 +7,18 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function Move(props) {
+	var outerClases = "move-outer " + props.name.toLowerCase() + "-move";
 	return React.createElement(
-		"button",
+		"div",
 		{
-			className: "move",
+			className: outerClases,
 			onClick: props.onClick
 		},
-		props.name
+		React.createElement(
+			"div",
+			{ className: "move-inner" },
+			React.createElement("img", { className: "move-img", src: props.imgPath })
+		)
 	);
 }
 
@@ -24,7 +29,7 @@ function PlayAgainButton(props) {
 			id: "play-again-btn",
 			onClick: props.onClick
 		},
-		"Play Again"
+		"PLAY AGAIN"
 	);
 }
 
@@ -37,7 +42,7 @@ function ShowRulesButton(props) {
 				return alert('rules!');
 			}
 		},
-		"Rules"
+		"RULES"
 	);
 }
 
@@ -53,25 +58,17 @@ function Scoreboard(props) {
 	return React.createElement(
 		"div",
 		{ id: "scoreboard" },
+		React.createElement("img", { id: "logo", src: "images/logo-bonus.svg" }),
 		React.createElement(
 			"div",
-			{ id: "scoreboard-title" },
-			"Rock",
-			React.createElement("br", null),
-			"Paper",
-			React.createElement("br", null),
-			"Scissors"
-		),
-		React.createElement(
-			"div",
-			{ id: "score" },
+			{ id: "score-container" },
 			React.createElement(
-				"span",
+				"div",
 				{ id: "score-label" },
-				"Score: "
+				"SCORE"
 			),
 			React.createElement(
-				"span",
+				"div",
 				{ id: "score-value" },
 				props.score
 			)
@@ -98,53 +95,22 @@ var Board = function (_React$Component) {
 				key: move,
 				onClick: function onClick() {
 					return _this2.props.handleMoveClick(move);
-				}
+				},
+				imgPath: "images/icon-" + move.toLowerCase() + ".svg"
 			});
 		}
 	}, {
-		key: "renderMovesPickedStep",
-		value: function renderMovesPickedStep() {
-			return React.createElement(
-				"div",
-				null,
-				React.createElement(
-					"p",
-					null,
-					"You picked ",
-					this.renderMove(this.props.playerMove)
-				),
-				React.createElement(
-					"p",
-					null,
-					"The house picked ",
-					this.renderMove(this.props.houseMove)
-				)
-			);
-		}
-	}, {
-		key: "renderShowResultsStep",
-		value: function renderShowResultsStep() {
+		key: "renderResult",
+		value: function renderResult() {
 			var _this3 = this;
 
-			var resultMessage = this.props.roundResult === 1 ? 'You win' : this.props.roundResult === 0 ? "It's a tie" : 'You lose';
+			var resultMessage = this.props.roundResult === 1 ? 'YOU WIN' : this.props.roundResult === 0 ? "IT'S A TIE" : 'YOU LOSE';
 			return React.createElement(
 				"div",
-				null,
+				{ id: "result-container" },
 				React.createElement(
 					"p",
-					null,
-					"You picked ",
-					this.props.playerMove
-				),
-				React.createElement(
-					"p",
-					null,
-					"The house picked ",
-					this.props.houseMove
-				),
-				React.createElement(
-					"p",
-					null,
+					{ id: "result-message" },
 					resultMessage
 				),
 				React.createElement(PlayAgainButton, { onClick: function onClick() {
@@ -153,15 +119,60 @@ var Board = function (_React$Component) {
 			);
 		}
 	}, {
-		key: "render",
-		value: function render() {
+		key: "renderRoundStart",
+		value: function renderRoundStart() {
 			var _this4 = this;
 
-			if (this.props.gameStep === 'roundStart') return this.props.moves.map(function (move) {
-				return _this4.renderMove(move);
-			});
-			if (this.props.gameStep === 'movesPicked') return this.renderMovesPickedStep();
-			if (this.props.gameStep === 'showResult') return this.renderShowResultsStep();
+			return React.createElement(
+				"div",
+				{ id: "board-outer", className: "round-start" },
+				React.createElement(
+					"div",
+					{ id: "board-inner" },
+					this.props.moves.map(function (move) {
+						return _this4.renderMove(move);
+					})
+				)
+			);
+		}
+	}, {
+		key: "renderMovesPicked",
+		value: function renderMovesPicked() {
+			var showWinner = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+			var stepClass = showWinner ? "show-results" : "moves-picked";
+			return React.createElement(
+				"div",
+				{ id: "board-outer", className: stepClass },
+				React.createElement(
+					"div",
+					{ id: "player-choice", className: "choice" },
+					React.createElement(
+						"div",
+						{ id: "player-choice-label", className: "choice-label" },
+						"YOU PICKED"
+					),
+					this.renderMove(this.props.playerMove)
+				),
+				showWinner ? this.renderResult() : null,
+				React.createElement(
+					"div",
+					{ id: "house-choice", className: "choice" },
+					React.createElement(
+						"div",
+						{ id: "house-choice-label", className: "choice-label" },
+						"THE HOUSE PICKED"
+					),
+					this.renderMove(this.props.houseMove)
+				)
+			);
+		}
+	}, {
+		key: "render",
+		value: function render() {
+			if (this.props.gameStep === 'roundStart') return this.renderRoundStart();
+			if (this.props.gameStep === 'movesPicked') return this.renderMovesPicked();
+			if (this.props.gameStep === 'showResult') return this.renderMovesPicked(showWinner = true);
 			return "Invalid game step.";
 		}
 	}]);
@@ -189,6 +200,7 @@ var Game = function (_React$Component2) {
 	_createClass(Game, [{
 		key: "handleMoveClick",
 		value: function handleMoveClick(move) {
+			if (this.state.gameStep !== 'roundStart') return;
 			//choose randomly 
 			var houseMove = this.props.moves[Math.floor(Math.random() * this.props.moves.length)];
 			//-1=you lose, 0=draw, 1=you win
@@ -225,7 +237,7 @@ var Game = function (_React$Component2) {
 
 			return React.createElement(
 				"div",
-				{ onClick: this.handleWindowClick },
+				{ id: "game", onClick: this.handleWindowClick },
 				React.createElement(Scoreboard, {
 					score: this.state.score
 				}),
@@ -250,7 +262,7 @@ var Game = function (_React$Component2) {
 	return Game;
 }(React.Component);
 
-var moves = ['Rock', 'Paper', 'Scissors', 'Lizard', 'Spock'];
+var moves = ['Spock', 'Scissors', 'Paper', 'Lizard', 'Rock'];
 //rules[x]=[a,b,c] means x beats a, b and c
 var rules = {
 	'Rock': ['Lizard', 'Scissors'],
@@ -264,10 +276,3 @@ ReactDOM.render(React.createElement(Game, {
 	moves: moves,
 	rules: rules
 }), document.getElementById('root'));
-
-// (
-//    	<React.Fragment>
-//    	<h1>Hello, world!</h1>
-//    	<h2>it's react</h2>
-//    	</React.Fragment>
-//    )
