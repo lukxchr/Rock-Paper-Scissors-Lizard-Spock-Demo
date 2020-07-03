@@ -10,14 +10,20 @@ $background1: hsl(214, 47%, 23%);
 $background2: hsl(237, 49%, 15%);
 $scissors1: hsl(39, 89%, 49%);
 $scissors2: hsl(40, 84%, 53%);
+$scissors-shadow: rgb(199, 106, 20);
 $paper1: hsl(230, 89%, 62%);
 $paper2: hsl(230, 89%, 65%);
+$paper-shadow: rgb(40, 69, 188);
 $rock1: hsl(349, 71%, 52%);
 $rock2: hsl(349, 70%, 56%);
+$rock-shadow: rgb(157, 20, 50);
 $lizard1: hsl(261, 73%, 60%); 
 $lizard2: hsl(261, 72%, 63%);
+$lizard-shadow: rgb(94, 55, 169);
 $spock1: hsl(189, 59%, 53%);
 $spock2: hsl(189, 58%, 57%);
+$spock-shadow: rgb(56,162,183);
+
 
 body {
   background-image: radial-gradient($background1, $background2);
@@ -25,23 +31,15 @@ body {
   font-family: "Barlow Semi Condensed";
   height: 100vh;
   width: 100vw;
-
   overflow: hidden;
-/*  height: 100%;
-  width: 100%;*/
 }
-
 #game {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
-	// margin: 1vmin;
+	justify-content: center;	
 }
 
-/*div {
-	border: dashed 1px;
-}*/
 
 /*scoreboard*/
 #scoreboard {
@@ -84,17 +82,17 @@ body {
 
 /*main game window: board and moves for different game steps*/
 
+//main game window which display moves (visible at each game step)
 #board-outer {
 	height: 70vh;
 	width: 80vw;
-	// min-width: 85vh;
-	// min-width: 500px;
 	min-width: 450px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 }
 
+//pentagon background for roundStart step 
 #board-inner {
 		width: 45vh;
 		height: 45vh;
@@ -103,14 +101,18 @@ body {
 		justify-content: center;
 		align-content: space-between;
 		background: url('images/bg-pentagon.svg');
-		// background-size: 329px 313px;
 		background-size: 45vh * 329/313 45vh;
-		// background-size: auto auto;
 	}
 
-
-
 // moves
+@mixin move-outer-shadow($color) {
+	box-shadow: inset 0px -0.75vmin 0px 0px $color;
+}
+
+%move-inner-shadow {
+	box-shadow: inset 0px 0.5vmin 0px 0px rgb(198, 201, 213);
+}
+
 .move-outer {
 	border-radius: 50%;
 	width: 15vh;
@@ -120,6 +122,7 @@ body {
 	align-items: center;
 }
 .move-inner {
+	@extend %move-inner-shadow;
 	background-color: white;
 	width: 50%;
 	height: 50%;
@@ -132,51 +135,50 @@ body {
 	width: 90%;
 	height: 90%;
 }
-%rock-shared {
+.rock-move {
 	background-image: radial-gradient($rock1, $rock2);
-	position: relative;
+	@include move-outer-shadow($rock-shadow);
 }
-%paper-shared {
+.paper-move {
 	background-image: radial-gradient($paper1, $paper2);
-	position: relative;
+	@include move-outer-shadow($paper-shadow);
 }
-%scissors-shared {
+.scissors-move {
 	background-image: radial-gradient($scissors1, $scissors2);
-	position: relative;
+	@include move-outer-shadow($scissors-shadow);
 }
-%lizard-shared {
+.lizard-move {
 	background-image: radial-gradient($lizard1, $lizard2);
-	position: relative;
+	@include move-outer-shadow($lizard-shadow);
 }
-%spock-shared {
+.spock-move {
 	background-image: radial-gradient($spock1, $spock2);
-	position: relative;
+	@include move-outer-shadow($spock-shadow);
 }
 
-// positions moves around pentagon for game start
+// position moves around pentagon for game start
 .round-start {
 	.rock-move {
-		@extend %rock-shared;
+		position: relative;
 		bottom: -12.5%;
 		right: -12.5%;
 	}
 	.paper-move {
-		@extend %paper-shared;
+		position: relative;
 		bottom: -25%;
 		right: -15%;
 	}
 	.scissors-move {
-		@extend %scissors-shared;
 		position: relative;
 		top: -12.5%;
 	}
 	.lizard-move {
-		@extend %lizard-shared;
+		position: relative;
 		bottom: -12.5%;
 		left: -12.5%
 	}
 	.spock-move {
-		@extend %spock-shared;
+		position: relative;
 		bottom: -25%;
 		left: -15%;
 	}
@@ -187,84 +189,16 @@ body {
 		height: 35vmin;
 		width: 35vmin;
 	}
-	.rock-move {
-		@extend %rock-shared;
-	}
-	.paper-move {
-		@extend %paper-shared;
-
-	}
-	.scissors-move {
-		@extend %scissors-shared;
-	
-	}
-	.lizard-move {
-		@extend %lizard-shared;
-	
-	}
-	.spock-move {
-		@extend %spock-shared;
-	}
 }
 
-
-
-
-// other
-
-
-
-$btn-border-radius: 5px;
-
-#rules-button {
-	border-radius: $btn-border-radius;
-	border: solid 2px;
-	height: 5vh;
-	width: 10vw;
-	min-width: 100px;
-	color: white;
-	background: none;
-	margin: 2vh;
-}
-
-@media only screen and (min-width: 600px) {
-  #rules-button {
-    align-self: flex-end;
-  }
-}
-
-#play-again-btn {
-	border-radius: $btn-border-radius;
-	background-color: white;
-	color: $background1;
-	height: 6vh;
-	width: 12vw;
-	min-width: 100px;
-	border: none;
-	font-weight: 700;
-}
+//house and player choices for showResults step
 
 #player-choice {
 	margin-right: 2vw;
 }
-
 #house-choice {
 	margin-left: 2vw;
 }
-
-
-@media only screen and (max-width: 599px) {
-  #board-outer {
-  	flex-wrap: wrap;
-  }
-  #result-container {
-  	order: 1
-  }  
-  #scoreboard {
-  	min-width: 90vw;
-  }
-}
-
 .choice-label {
 	display: flex;
 	justify-content: center;
@@ -278,7 +212,6 @@ $btn-border-radius: 5px;
 	flex-direction: column;
 	align-items: center;
 }
-
 #result-message {
 	display: flex;
 	justify-content: center;
@@ -288,10 +221,117 @@ $btn-border-radius: 5px;
 	min-width: 150px;
 }
 
+// buttons
+$btn-border-radius: 5px;
+#rules-button {
+	border-radius: $btn-border-radius;
+	border: solid 2px;
+	height: 5vh;
+	width: 10vw;
+	min-width: 100px;
+	color: white;
+	background: none;
+	margin: 2vh;
+}
+#play-again-btn {
+	border-radius: $btn-border-radius;
+	background-color: white;
+	color: $background1;
+	height: 6vh;
+	width: 12vw;
+	min-width: 100px;
+	border: none;
+	font-weight: 700;
+}
+
+// rules modal
+
+#rules-modal {
+	position: fixed; 
+	z-index: 1; 
+	border-radius: 10px;
+	padding: 3vmin;
+	background-color: white;
+	width: 42vh;
+	height: 45vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+}
+.close-btn {
+	width: 20px;
+	height: 20px;
+}
+#rules-modal-header {
+	display: flex;
+	justify-content: space-between;
+	font-size: 1.5em
+}
+#rules-modal-footer {
+	display: none;
+	// margin-bottom: 2vh;
+}
+#rules-modal-content {
+	display: flex;
+	justify-content: center;
+}
+#rules-img {
+	width: 336/330 * 35vh;
+	height: 35vh;
+	margin-top: 2vh;
+	margin-bottom: 2vh;
+}
+
+//CSS rules
+
+// positions rules button in the center for small screens 
+// and in the bottom right corner for big ones
+@media only screen and (min-width: 600px) {
+  #rules-button {
+    align-self: flex-end;
+  }
+}
+
+@media only screen and (max-width: 599px) {
+  // for showResults step:;
+  // -big screen:  show result and play again btn between player and house choices (one row)
+  // -small screen: show result and play again btn below (two rows) 
+  #board-outer {
+  	flex-wrap: wrap;
+  }
+  #result-container {
+  	order: 1
+  }  
+  #scoreboard {
+  	min-width: 90vw;
+  }
+  // on small screens: make rules modal full screen, 
+  // move close btn to footer, center title inside header 
+  #rules-modal {
+  	width: 100vw;
+  	height: 100vh;
+  }
+  #rules-modal-header {
+  	justify-content: center;
+  	.close-btn {
+  	 	display: none;
+  	}
+  }
+  #rules-modal-footer {
+  	display: flex;
+  	justify-content: center;
+  }
+  #rules-img {
+  	width: 336/330 * 60vh;
+	height: 60vh;
+  }
+}
+
 .attribution {
 	position: fixed;
 	bottom: 0px;
 }
+
 
 
 

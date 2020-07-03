@@ -26,14 +26,31 @@ function ShowRulesButton(props) {
   return (
     <button
       id="rules-button"
-      onClick={() => alert('rules!')}
+      onClick={props.onClick}
     >RULES</button>
   );
 }
 
 function RulesModal(props) {
+  const close_btn = (
+    <img 
+      className="close-btn" 
+      src="images/icon-close.svg"
+      onClick = {props.onCloseClick}
+    />);
   return (
-    <div>Rulesboard</div>
+    <div id="rules-modal">
+      <div id="rules-modal-header">
+        <div id="rules-modal-title">RULES</div>
+        {close_btn}
+      </div>
+      <div id="rules-modal-content">
+        <img id="rules-img" src="images/image-rules-bonus.svg"/>
+      </div>
+      <div id="rules-modal-footer">
+        {close_btn}
+      </div>
+    </div>
   );
 }
 
@@ -135,13 +152,18 @@ class Game extends React.Component {
   handlePlayAgainClick() {
     this.setState({gameStep: 'roundStart'});
   }
-	//global listener (e.g. click anywhere to go to the next step)
+  // handleShowRulesClick() {
+  //   alert("rules");
+  // }
+
+	//click anywhere to go to the next step
 	handleWindowClick() {
 		if (this.state.gameStep == 'movesPicked') {
 			const newScore = this.state.score + this.state.roundResult;
 			this.setState({
 				score: newScore,
-				gameStep: 'showResult'
+				gameStep: 'showResult',
+        showRules: false
 			});	
 		} 
 	}
@@ -161,7 +183,8 @@ class Game extends React.Component {
 					houseMove = {this.state.houseMove}
 					roundResult = {this.state.roundResult}
 				/>
-				<ShowRulesButton/>
+				<ShowRulesButton onClick = {() => this.setState({showRules: !this.state.showRules})} />
+        {this.state.showRules ? <RulesModal onCloseClick= {() => this.setState({showRules: false})}/> : null}
 			</div>
 		);
 	}
