@@ -152,9 +152,6 @@ class Game extends React.Component {
   handlePlayAgainClick() {
     this.setState({gameStep: 'roundStart'});
   }
-  // handleShowRulesClick() {
-  //   alert("rules");
-  // }
 
 	//click anywhere to go to the next step
 	handleWindowClick() {

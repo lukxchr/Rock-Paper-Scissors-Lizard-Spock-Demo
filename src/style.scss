@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&display=swap');
 
-
+// text colors
 $dark-text: hsl(229, 25%, 31%);
 $score-text: hsl(229, 64%, 46%);
 $header-outline: hsl(217, 16%, 45%);
 
-/*gradient colors*/
+/*gradient and shadow colors*/
 $background1: hsl(214, 47%, 23%);
 $background2: hsl(237, 49%, 15%);
 $scissors1: hsl(39, 89%, 49%);
@@ -24,7 +24,7 @@ $spock1: hsl(189, 59%, 53%);
 $spock2: hsl(189, 58%, 57%);
 $spock-shadow: rgb(56,162,183);
 
-
+// body and main game container
 body {
   background-image: radial-gradient($background1, $background2);
   color: $dark-text;
@@ -40,7 +40,6 @@ body {
 	justify-content: center;	
 }
 
-
 /*scoreboard*/
 #scoreboard {
 	display: flex;
@@ -49,8 +48,7 @@ body {
 	border-color: $header-outline;
 	border: solid 1px;
 	border-radius: 10px;
-	max-width: 100vw;
-	min-width: 50vw;
+	width: 60vw;
 	height: 20vh;
 	padding-left: 5px;
 	padding-right: 5px;
@@ -65,9 +63,13 @@ body {
 	border-radius: 5%;
 }
 #score-label {
-	font-size: 2.5vh;
+	font-size: 2vh;
 	display: flex;
 	justify-content: center;
+	color: $score-text;
+	font-weight: 100;
+	letter-spacing: 0.15em;
+
 }
 #score-value {
 	font-size: 10vh;
@@ -75,18 +77,16 @@ body {
 	justify-content: center;
 	line-height: 0.8;
 }
-
 #logo {
 	height: 90%;
 }
 
-/*main game window: board and moves for different game steps*/
+/*board and moves for different game steps*/
 
 //main game window which display moves (visible at each game step)
 #board-outer {
 	height: 70vh;
 	width: 80vw;
-	min-width: 450px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -94,29 +94,30 @@ body {
 
 //pentagon background for roundStart step 
 #board-inner {
-		width: 45vh;
-		height: 45vh;
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		align-content: space-between;
+		height: 70vmin;
+		width: 55vmin * 329/313;
 		background: url('images/bg-pentagon.svg');
-		background-size: 45vh * 329/313 45vh;
+		background-size: 55vmin * 329/313 55vmin;
+		background-repeat: no-repeat;
+		background-position: center bottom;
+		display: grid;
+		grid-template-columns: 5% 1fr 1% 2fr 1% 2fr 1% 1fr 5%;
+		grid-template-rows: 24% 1% 27% 1% 1fr 15%;
+		align-items: center;
+		justify-items: center;
 	}
 
 // moves
 @mixin move-outer-shadow($color) {
 	box-shadow: inset 0px -0.75vmin 0px 0px $color;
 }
-
 %move-inner-shadow {
 	box-shadow: inset 0px 0.5vmin 0px 0px rgb(198, 201, 213);
 }
-
 .move-outer {
 	border-radius: 50%;
-	width: 15vh;
-	height: 15vh;
+	width: 23vmin;
+	height: 23vmin;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -159,31 +160,28 @@ body {
 // position moves around pentagon for game start
 .round-start {
 	.rock-move {
-		position: relative;
-		bottom: -12.5%;
-		right: -12.5%;
+		grid-row-start: 6;
+		grid-column-start: 8;
 	}
 	.paper-move {
-		position: relative;
-		bottom: -25%;
-		right: -15%;
+		grid-row-start: 4;
+		grid-column-start: 9;
+
 	}
 	.scissors-move {
-		position: relative;
-		top: -12.5%;
+		grid-row-start: 2;
+		grid-column-start: 5;
 	}
 	.lizard-move {
-		position: relative;
-		bottom: -12.5%;
-		left: -12.5%
+		grid-row-start: 6;
+		grid-column-start: 2;
 	}
 	.spock-move {
-		position: relative;
-		bottom: -25%;
-		left: -15%;
+		grid-row-start: 4;
+		grid-column-start: 1;
 	}
 }
-
+//larger moves for further steps of the game
 .moves-picked, .show-results {
 	.move-outer {
 		height: 35vmin;
@@ -222,6 +220,7 @@ body {
 }
 
 // buttons
+
 $btn-border-radius: 5px;
 #rules-button {
 	border-radius: $btn-border-radius;
@@ -269,7 +268,6 @@ $btn-border-radius: 5px;
 }
 #rules-modal-footer {
 	display: none;
-	// margin-bottom: 2vh;
 }
 #rules-modal-content {
 	display: flex;
@@ -294,8 +292,8 @@ $btn-border-radius: 5px;
 
 @media only screen and (max-width: 599px) {
   // for showResults step:;
-  // -big screen:  show result and play again btn between player and house choices (one row)
-  // -small screen: show result and play again btn below (two rows) 
+  // -big screen:  show result and play again btn between chosen moves (one row)
+  // -small screen: show result and play again btn below chosen moves (two rows) 
   #board-outer {
   	flex-wrap: wrap;
   }
@@ -322,23 +320,13 @@ $btn-border-radius: 5px;
   	justify-content: center;
   }
   #rules-img {
-  	width: 336/330 * 60vh;
-	height: 60vh;
+  	width: 336/330 * 60vmin;
+	height: 60vmin;
   }
 }
 
 .attribution {
 	position: fixed;
 	bottom: 0px;
+	font-size: 1vh;
 }
-
-
-
-
-
-
-
-
-
-
-

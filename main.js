@@ -239,9 +239,6 @@ var Game = function (_React$Component2) {
     value: function handlePlayAgainClick() {
       this.setState({ gameStep: 'roundStart' });
     }
-    // handleShowRulesClick() {
-    //   alert("rules");
-    // }
 
     //click anywhere to go to the next step
 
